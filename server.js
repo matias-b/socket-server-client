@@ -1,8 +1,25 @@
 const net = require('net');
 const readline = require('readline');
 
+// Definicion de puerto y direccion de escucha
 const LISTEN_PORT = 30000
 const LISTEN_ADDR = "0.0.0.0"
+
+// Funcion para generar hora en formato [hh:mm:ss]
+function timeString() {
+    const now = new Date();
+
+    let hh = String(now.getHours()).padStart(2, '0');
+    let mm = String(now.getMinutes()).padStart(2, '0');
+    let ss = String(now.getSeconds()).padStart(2, '0');
+
+    return `[${hh}:${mm}:${ss}]`;
+}
+// Sobreescribir la función console.log para agregar la hora a los mensajes
+const oldLog = console.log;
+console.log = function (data) {
+    oldLog(timeString(), data);
+};
 
 // Lista de clientes conectados
 let clients = [];
@@ -46,16 +63,18 @@ rl.on('line', (input) => {
         const kickedClient = clients.find(client => client.username === nameToKick);
 
         if (kickedClient) {
-            kickedClient.write('Has sido expulsado del chat');
+            kickedClient.write(`${timeString()} Has sido expulsado del chat`);
             kickedClient.end();
             console.log(`Usuario ${nameToKick} expulsado`);
         } else {
             console.log('Usuario no encontrado');
         }
     } else {
-        broadcastMessage(`> Servidor: ${input}\n`);
+        broadcastMessage(`${timeString()}> Servidor: ${input}\n`);
     }
 });
+
+
 
 // Crea el servidor TCP, con un callback para cada nueva conexión
 const server = net.createServer((socket) => {
@@ -67,6 +86,7 @@ const server = net.createServer((socket) => {
     let username = '';
 
     socket.on('data', (data) => {
+
         const message = data.toString().trim();
 
         if (!username) {
@@ -76,7 +96,7 @@ const server = net.createServer((socket) => {
 
             socket.username = username;
 
-            const msg = `${username} se ha unido al chat.\n`
+            const msg = `${timeString()} ${username} se ha unido al chat.\n`
 
             console.log(msg);
             broadcastMessage(msg, socket);
@@ -116,7 +136,7 @@ const server = net.createServer((socket) => {
                 } else {
                     // Mensaje de chat a todos los usuarios
                     console.log(username + ' dice: ' + message);
-                    broadcastMessage(`${username}: ${message}\n`, socket);
+                    broadcastMessage(`${timeString()} ${username}: ${message}\n`, socket);
                 }
             }
         }

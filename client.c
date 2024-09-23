@@ -1,6 +1,7 @@
 
-// Para compilar gcc client.c -o client -lpthread
+// Para compilar: gcc client.c -o client -lpthread
 // Ejecutar ./client
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -52,13 +53,14 @@ void *receive_messages(void *socket_desc)
 
 int main(int argc, char *argv[])
 {
+    // Verificar que existan parametros
     if (argc != 3)
     {
         print_help();
         return 1;
     }
 
-// leer ip y puerto por parametro
+    // leer ip y puerto por parametro
     char *server_ip = argv[1];
     int server_port = atoi(argv[2]);
 

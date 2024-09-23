@@ -1,8 +1,8 @@
 const net = require('net');
 const readline = require('readline');
 
-
-let username;
+const SERVER_ADDR = "127.0.0.1"
+const SERVER_PORT = 30000
 
 // Configuración para leer entradas del usuario
 const rl = readline.createInterface({
@@ -11,7 +11,7 @@ const rl = readline.createInterface({
 });
 
 // Conectarse al servidor de chat
-const client = net.createConnection({ localAddress: "127.0.0.1", port: 30000 }, () => {
+const client = net.createConnection({ localAddress: SERVER_ADDR, port: SERVER_PORT }, () => {
     console.log('Conectado al servidor de chat.');
 });
 
@@ -34,6 +34,5 @@ client.on('error', (err) => {
 
 // Leer mensajes del usuario y enviarlos al servidor
 rl.on('line', (input) => {
-        client.write(input);
-        
+    client.write(input);
 });
