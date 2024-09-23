@@ -1,6 +1,6 @@
 
 // Para compilar: gcc client.c -o client -lpthread
-// Ejecutar ./client
+// Ejecutar ./client ip puerto
 
 #include <stdio.h>
 #include <stdlib.h>
